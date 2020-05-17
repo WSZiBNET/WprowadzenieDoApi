@@ -66,6 +66,7 @@ namespace WprowadzenieDoApi
 
             #endregion
 
+            #region zapisz do xml
             XmlWriterSettings wpiszDoXMLPracownikSettings = new XmlWriterSettings();
             wpiszDoXMLPracownikSettings.OmitXmlDeclaration = true;
             wpiszDoXMLPracownikSettings.Indent = true;
@@ -118,13 +119,17 @@ namespace WprowadzenieDoApi
             wpiszDoXMLPracownik.Close();
 
             Console.WriteLine("Zapisałem pracownika do xml-a ");
+            #endregion
 
+            #region Serialize
             StreamWriter serialWriter;
             // dont need to use XmlWriterSettings
             serialWriter = new StreamWriter($"serializeXML{pracownik.Imie}{pracownik.Nazwisko}.xml");
             XmlSerializer xmlWriter = new XmlSerializer(pracownik.GetType());
             xmlWriter.Serialize(serialWriter, pracownik);
             serialWriter.Close();
+            Console.WriteLine("Zserializowałem pracownika do xml-a ");
+            #endregion
 
         }
 
