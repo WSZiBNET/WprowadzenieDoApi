@@ -1,9 +1,12 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Text.Json.Serialization;
 using System.Xml;
 using System.Xml.Serialization;
-using XmlZadanie;
+using WprowadzenieDoApi;
 
 namespace WprowadzenieDoApi
 {
@@ -11,12 +14,15 @@ namespace WprowadzenieDoApi
     {
         static void Main(string[] args)
         {
+            #region wybor aplikacji
             Console.WriteLine("Wybierz Program:");
             Console.WriteLine("1 - przelicznik walut");
             Console.WriteLine("2 - zapisz osobę do xml");
             Console.WriteLine("3 - zapisz pracownika firmy do xml");
+            Console.WriteLine("4 - Deserializacja do słownika Json");
+            Console.WriteLine("5 - Deserializacja do klasy Json");
             int prog= Convert.ToInt32(Console.ReadLine() );
-            if(prog==1)
+            if (prog == 1)
             {
                 Czytaj();
             }
@@ -28,7 +34,20 @@ namespace WprowadzenieDoApi
             {
                 zapiszPracownika();
             }
+            else if (prog == 4)
+            {
+                DeserializacjaSlownik();
+            }
+            else if (prog == 5)
+            {
+                DeserializacjaKlasa();
+            }
+            else
+            {
+                Console.WriteLine("Zły wybór");
+            }
             Console.ReadKey();
+            #endregion
         }
 
         static void zapiszPracownika()
@@ -137,6 +156,7 @@ namespace WprowadzenieDoApi
 
         static void zapiszOsobe()
         {
+            #region Zapisz Osobe
             Console.WriteLine("__Zapisuję osobę do xml-a__");
 
             XmlWriter wpiszDoXML = XmlWriter.Create("osoby.xml");
@@ -159,17 +179,21 @@ namespace WprowadzenieDoApi
             wpiszDoXML.Close();
 
             Console.WriteLine("Zapisałem do osobę do xml-a ");
+            #endregion
         }
 
         static void Czytaj()
         {
+            #region wczytaj xml
             Console.WriteLine("--Przelicznik walut--");
             decimal kurs = 0m;
             Console.WriteLine("___Czytam___");
             XmlReader xmlReader = XmlReader.Create("http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml");
 
             Console.WriteLine("__Wczytano aktualne kursy__");
+            #endregion
 
+            #region klakulator walut
             Console.WriteLine("Podaj walute (trzyliterowy kod)");
             string waluta = Console.ReadLine();
             Console.WriteLine("Podaj kwotę");
@@ -195,8 +219,39 @@ namespace WprowadzenieDoApi
             xmlReader.Close();
 
             Console.WriteLine("__Dziekuję za skorzystanie z Oski Kalkulator Walut __");
+            #endregion
         }
 
+        //static void testJson()
+        //{
+        //    var example = @"{""imię"":""Janusz Wielki"",""wiek"":42}";
+
+        //}
+
+        //Deserializacja do slownieka 
+        static void DeserializacjaSlownik()
+        {
+            Console.WriteLine("--Deserializacja do słownika z json--");
+
+            var example = @"{""imię"":""Janusz Wielki"",""wiek"":42}";
+            var slownikCzlowek = JsonConvert.DeserializeObject<Dictionary<string,string>>(example);
+            Console.WriteLine($"Imie to {slownikCzlowek["imię"]}, a wiek to {slownikCzlowek["wiek"]}"); 
+        }
+
+        //Deserializacja do klasy 
+        static void DeserializacjaKlasa()
+        {
+            Console.WriteLine("--Deserializacja do klasy z json--");
+
+            var example = @"{""imię"":""Janusz Wielki"",""wiek"":42}";
+            var jakisCzlowek = JsonConvert.DeserializeObject<Osoba>(example);
+            Console.WriteLine($"Imie to {jakisCzlowek.Imie}, a wiek to {jakisCzlowek.Wiek}");
+        }
+
+        static void SerializacjaObiektu()
+        {
+            Console.WriteLine("-Serializacja  do json--");
+        }
 
     }
 }
