@@ -1,8 +1,10 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text.Json.Serialization;
 using System.Xml;
 using System.Xml.Serialization;
@@ -21,6 +23,8 @@ namespace WprowadzenieDoApi
             Console.WriteLine("3 - zapisz pracownika firmy do xml");
             Console.WriteLine("4 - Deserializacja do słownika Json");
             Console.WriteLine("5 - Deserializacja do klasy Json");
+            Console.WriteLine("6 - Serializacja do Json");
+            Console.WriteLine("7 - Linq do Json");
             int prog= Convert.ToInt32(Console.ReadLine() );
             if (prog == 1)
             {
@@ -41,6 +45,14 @@ namespace WprowadzenieDoApi
             else if (prog == 5)
             {
                 DeserializacjaKlasa();
+            }
+            else if (prog == 6)
+            {
+                SerializacjaObiektu();
+            }
+            else if (prog == 7)
+            {
+                Linq2Json();
             }
             else
             {
@@ -243,15 +255,101 @@ namespace WprowadzenieDoApi
         {
             Console.WriteLine("--Deserializacja do klasy z json--");
 
-            var example = @"{""imię"":""Janusz Wielki"",""wiek"":42}";
-            var jakisCzlowek = JsonConvert.DeserializeObject<Osoba>(example);
+            var example = @"{""Imie"":""Janusz Wielki"",""Wiek"":42}";
+            var jakisCzlowek = JsonConvert.DeserializeObject<OsobaJson>(example);
             Console.WriteLine($"Imie to {jakisCzlowek.Imie}, a wiek to {jakisCzlowek.Wiek}");
         }
 
         static void SerializacjaObiektu()
         {
             Console.WriteLine("-Serializacja  do json--");
+            var czlowiek = new Czlowiek
+            {
+                Imie = "Daniel",
+                Nazwisko = "Kowalski",
+                AdresDomowy = new Adres
+                {
+                    Ulica = "Tyniecka",
+                    NumerDomu = 15,
+                    KodPocztowy = "43-100",
+                    Miasto = "Tychy"
+                }
+            };
+
+            var tekst = JsonConvert.SerializeObject(czlowiek);
+            //or
+            var tekst2 = JsonConvert.SerializeObject(czlowiek, Newtonsoft.Json.Formatting.Indented);
+
+            Console.WriteLine($"{tekst}");
+            Console.WriteLine("-------");
+            Console.WriteLine($"{tekst2}");
         }
 
-    }
+
+    static void Linq2Json()
+    {
+        Czlowiek czlowiek1 = new Czlowiek
+        {
+            Imie = "Daniel",
+            Nazwisko = "Krasnokucki",
+            Wiek = 30,
+            AdresDomowy = new Adres
+            {
+                KodPocztowy = "40-789",
+                Miasto = "Katowice",
+                Ulica = "Marszałkowska",
+                NumerDomu = 109876545
+            }
+        };
+        Czlowiek czlowiek2 = new Czlowiek
+        {
+            Imie = "Stefan",
+            Nazwisko = "Nowak",
+            Wiek = 130,
+            AdresDomowy = new Adres
+            {
+                KodPocztowy = "50-789",
+                Miasto = "Lublin",
+                Ulica = "Piotrkowska",
+                NumerDomu = 23
+            }
+        };
+
+        Czlowiek czlowiek3 = new Czlowiek
+        {
+            Imie = "Iwona",
+            Nazwisko = "Kowalska",
+            Wiek = 20,
+            AdresDomowy = new Adres
+            {
+                KodPocztowy = "30-543",
+                Miasto = "Kraków",
+                Ulica = "al. Pokoju",
+                NumerDomu = 100
+            }
+        };
+
+        List<Czlowiek> listaLudzi = new List<Czlowiek>();
+        listaLudzi.Add(czlowiek1);
+        listaLudzi.Add(czlowiek2);
+        listaLudzi.Add(czlowiek3);
+
+        string jsonLista = JsonConvert.SerializeObject(listaLudzi, Newtonsoft.Json.Formatting.Indented);
+        Console.WriteLine(jsonLista);
+
+        var lista = JArray.Parse(jsonLista);
+
+            // Pokaż imię, nazwisko, Adres (ulica) ludzi, któzy mają poniżej 30 lat
+            var ponizej30 = from czlowiek in lista
+                            where Convert.ToInt32(czlowiek["Wiek"]) < 30
+                            select new { imie = czlowiek["Imie"], nazwisko = czlowiek["Nazwisko"], ulica = czlowiek["AdresDomowy"]["Ulica"] };
+
+            foreach (var osoba in ponizej30)
+            {
+                Console.WriteLine(osoba);
+            }
+
+        }
+
+}
 }
