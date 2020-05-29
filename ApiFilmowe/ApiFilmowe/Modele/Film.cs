@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace ApiFilmowe.Modele
@@ -16,6 +17,7 @@ namespace ApiFilmowe.Modele
         public long RezyserId { get; set; }
 
         public virtual Rezyser Rezyser { get; set; }
+        [JsonIgnore]
         public virtual ICollection<Klient> Klient { get; set; }
     }
 }

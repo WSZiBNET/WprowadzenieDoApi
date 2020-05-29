@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace ApiFilmowe.Modele
@@ -16,6 +17,7 @@ namespace ApiFilmowe.Modele
         public string KodPocztowy { get; set; }
         public long NumerDomu { get; set; }
 
+        [JsonIgnore]
         public virtual ICollection<Klient> Klient { get; set; }
     }
 }

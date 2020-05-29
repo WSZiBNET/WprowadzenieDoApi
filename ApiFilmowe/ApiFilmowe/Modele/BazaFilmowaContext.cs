@@ -56,7 +56,7 @@ namespace ApiFilmowe.Modele
                     .WithMany(p => p.Film)
                     .HasForeignKey(d => d.RezyserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Film__RezyserId__37A5467C");
+                    .HasConstraintName("FK__Film__RezyserId__164452B1");
             });
 
             modelBuilder.Entity<Klient>(entity =>
@@ -77,12 +77,12 @@ namespace ApiFilmowe.Modele
                     .WithMany(p => p.Klient)
                     .HasForeignKey(d => d.AdresId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Klient__AdresId__3C69FB99");
+                    .HasConstraintName("FK__Klient__AdresId__173876EA");
 
                 entity.HasOne(d => d.Film)
                     .WithMany(p => p.Klient)
                     .HasForeignKey(d => d.FilmId)
-                    .HasConstraintName("FK__Klient__FilmId__3D5E1FD2");
+                    .HasConstraintName("FK__Klient__FilmId__182C9B23");
             });
 
             modelBuilder.Entity<Rezyser>(entity =>

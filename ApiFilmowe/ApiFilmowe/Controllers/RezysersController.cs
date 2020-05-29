@@ -11,48 +11,48 @@ namespace ApiFilmowe.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class KlientController : ControllerBase
+    public class RezysersController : ControllerBase
     {
         private readonly BazaFilmowaContext _context;
 
-        public KlientController(BazaFilmowaContext context)
+        public RezysersController(BazaFilmowaContext context)
         {
             _context = context;
         }
 
-        // GET: api/Klient
+        // GET: api/Rezysers
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Klient>>> GetKlient()
+        public async Task<ActionResult<IEnumerable<Rezyser>>> GetRezyser()
         {
-            return await _context.Klient.ToListAsync();
+            return await _context.Rezyser.ToListAsync();
         }
 
-        // GET: api/Klient/5
+        // GET: api/Rezysers/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Klient>> GetKlient(long id)
+        public async Task<ActionResult<Rezyser>> GetRezyser(long id)
         {
-            var klient = await _context.Klient.FindAsync(id);
+            var rezyser = await _context.Rezyser.FindAsync(id);
 
-            if (klient == null)
+            if (rezyser == null)
             {
                 return NotFound();
             }
-            klient.Adres = await _context.Adres.FindAsync(klient.AdresId);
-            return klient;
+
+            return rezyser;
         }
 
-        // PUT: api/Klient/5
+        // PUT: api/Rezysers/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutKlient(long id, Klient klient)
+        public async Task<IActionResult> PutRezyser(long id, Rezyser rezyser)
         {
-            if (id != klient.Id)
+            if (id != rezyser.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(klient).State = EntityState.Modified;
+            _context.Entry(rezyser).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +60,7 @@ namespace ApiFilmowe.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!KlientExists(id))
+                if (!RezyserExists(id))
                 {
                     return NotFound();
                 }
@@ -73,37 +73,37 @@ namespace ApiFilmowe.Controllers
             return NoContent();
         }
 
-        // POST: api/Klient
+        // POST: api/Rezysers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Klient>> PostKlient(Klient klient)
+        public async Task<ActionResult<Rezyser>> PostRezyser(Rezyser rezyser)
         {
-            _context.Klient.Add(klient);
+            _context.Rezyser.Add(rezyser);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetKlient", new { id = klient.Id }, klient);
+            return CreatedAtAction("GetRezyser", new { id = rezyser.Id }, rezyser);
         }
 
-        // DELETE: api/Klient/5
+        // DELETE: api/Rezysers/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Klient>> DeleteKlient(long id)
+        public async Task<ActionResult<Rezyser>> DeleteRezyser(long id)
         {
-            var klient = await _context.Klient.FindAsync(id);
-            if (klient == null)
+            var rezyser = await _context.Rezyser.FindAsync(id);
+            if (rezyser == null)
             {
                 return NotFound();
             }
 
-            _context.Klient.Remove(klient);
+            _context.Rezyser.Remove(rezyser);
             await _context.SaveChangesAsync();
 
-            return klient;
+            return rezyser;
         }
 
-        private bool KlientExists(long id)
+        private bool RezyserExists(long id)
         {
-            return _context.Klient.Any(e => e.Id == id);
+            return _context.Rezyser.Any(e => e.Id == id);
         }
     }
 }

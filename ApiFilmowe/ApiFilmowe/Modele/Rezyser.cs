@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace ApiFilmowe.Modele
 {
@@ -14,7 +15,7 @@ namespace ApiFilmowe.Modele
         public string Nazwisko { get; set; }
         public string Imie { get; set; }
         public string KrajPochodzenia { get; set; }
-
+        [JsonIgnore]
         public virtual ICollection<Film> Film { get; set; }
     }
 }
